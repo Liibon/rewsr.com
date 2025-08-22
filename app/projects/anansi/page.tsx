@@ -12,6 +12,11 @@ export default function AnansiPage() {
   const [showGetStarted, setShowGetStarted] = useState(false)
   const [selectedPath, setSelectedPath] = useState<"engineer" | "compliance" | null>(null)
 
+  // NEW: API testing state
+  const [apiKey, setApiKey] = useState("")
+  const [testResult, setTestResult] = useState<any>(null)
+  const [isLoading, setIsLoading] = useState(false)
+
   const { scrollY, scrollYProgress } = useScroll()
 
   // Create spring-based animations for smooth wheel rotation
@@ -65,6 +70,41 @@ export default function AnansiPage() {
       }, 2000)
     } catch (err) {
       console.error("Failed to copy text: ", err)
+    }
+  }
+
+  // NEW: API testing function
+  const testAPI = async () => {
+    if (!apiKey.trim()) {
+      alert("Please enter an API key")
+      return
+    }
+
+    setIsLoading(true)
+    try {
+      const response = await fetch("http://localhost:5000/compute", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          fn_type: "builtin",
+          fn: "vec_add",
+          args: [
+            [1, 2, 3],
+            [10, 20, 30],
+          ],
+          policy: { min_trust: "CPU_TEE", max_cost_usd: 0.1 },
+        }),
+      })
+
+      const result = await response.json()
+      setTestResult(result)
+    } catch (error) {
+      setTestResult({ error: "Failed to connect to API" })
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -739,7 +779,7 @@ result = anansi.compute(your_function, data, proof=True)`,
           </div>
         </section>
 
-        {/* Try It Out */}
+        {/* Live API Test Section */}
         <section className="py-24 border-t border-slate-800/50 text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -752,18 +792,63 @@ result = anansi.compute(your_function, data, proof=True)`,
               <span className="text-[#E8A0BF] font-light"> Try It?</span>
             </h2>
             <p className="text-xl text-slate-400 mb-16 max-w-2xl mx-auto font-light leading-relaxed">
-              It's going open source soon. If you find bugs or have ideas, let me know. Always looking for feedback from
-              people actually using this stuff.
+              Test the live API right here. Use API key:{" "}
+              <code className="bg-slate-800 px-2 py-1 rounded text-[#E8A0BF]">demo_key_123</code>
             </p>
+
+            {/* Live API Test */}
+            <div className="max-w-2xl mx-auto mb-16">
+              <motion.div
+                className="bg-slate-900/50 border border-slate-700 rounded-lg p-8"
+                whileHover={{
+                  borderColor: "#E8A0BF",
+                  boxShadow: "0 0 30px rgba(232, 160, 191, 0.1)",
+                }}
+                transition={{ duration: 0.3 }}
+              >
+                <h3 className="text-xl font-medium text-white mb-6">Live API Test</h3>
+                <div className="space-y-4">
+                  <input
+                    type="text"
+                    placeholder="Enter API key (try: demo_key_123)"
+                    value={apiKey}
+                    onChange={(e) => setApiKey(e.target.value)}
+                    className="w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded text-white placeholder-slate-400 focus:border-[#E8A0BF] focus:outline-none transition-colors"
+                  />
+                  <motion.button
+                    onClick={testAPI}
+                    disabled={isLoading}
+                    className="w-full px-6 py-3 bg-gradient-to-r from-[#E8A0BF] to-white text-black hover:from-white hover:to-[#E8A0BF] transition-all duration-300 font-mono font-medium disabled:opacity-50"
+                    whileHover={{ scale: isLoading ? 1 : 1.02 }}
+                    whileTap={{ scale: isLoading ? 1 : 0.98 }}
+                  >
+                    {isLoading ? "Testing..." : "Test Vector Addition"}
+                  </motion.button>
+                </div>
+
+                {testResult && (
+                  <motion.div
+                    className="mt-6 p-4 bg-slate-800/50 border border-slate-600 rounded"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <h4 className="text-white font-medium mb-2">API Response:</h4>
+                    <pre className="text-sm text-slate-200 overflow-x-auto">{JSON.stringify(testResult, null, 2)}</pre>
+                  </motion.div>
+                )}
+              </motion.div>
+            </div>
+
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                 <Link
-                  href="https://github.com/rewsr/anansi"
+                  href="http://localhost:5000/healthz"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="px-12 py-5 bg-gradient-to-r from-[#E8A0BF] to-white text-black hover:from-white hover:to-[#E8A0BF] transition-all duration-500 font-mono font-medium tracking-wide"
                 >
-                  Start Building
+                  API Docs
                 </Link>
               </motion.div>
               <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
