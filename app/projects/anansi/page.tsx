@@ -12,7 +12,7 @@ export default function AnansiPage() {
   const [showGetStarted, setShowGetStarted] = useState(false)
   const [selectedPath, setSelectedPath] = useState<"engineer" | "compliance" | null>(null)
 
-  // NEW: API testing state
+  // API testing state
   const [apiKey, setApiKey] = useState("")
   const [testResult, setTestResult] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(false)
@@ -73,7 +73,7 @@ export default function AnansiPage() {
     }
   }
 
-  // NEW: API testing function
+  // Updated API testing function - now uses Next.js API route
   const testAPI = async () => {
     if (!apiKey.trim()) {
       alert("Please enter an API key")
@@ -82,13 +82,13 @@ export default function AnansiPage() {
 
     setIsLoading(true)
     try {
-      const response = await fetch("http://localhost:5001/compute", {
+      const response = await fetch("/api/test-compute", {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${apiKey}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          apiKey: apiKey,
           fn_type: "builtin",
           fn: "vec_add",
           args: [
@@ -843,12 +843,12 @@ result = anansi.compute(your_function, data, proof=True)`,
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                 <Link
-                  href="http://localhost:5001/healthz"
+                  href="https://github.com/rewsr/anansi"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="px-12 py-5 bg-gradient-to-r from-[#E8A0BF] to-white text-black hover:from-white hover:to-[#E8A0BF] transition-all duration-500 font-mono font-medium tracking-wide"
                 >
-                  API Docs
+                  View Documentation
                 </Link>
               </motion.div>
               <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
