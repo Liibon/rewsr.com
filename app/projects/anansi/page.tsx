@@ -82,7 +82,7 @@ export default function AnansiPage() {
 
     setIsLoading(true)
     try {
-      const response = await fetch("http://localhost:5000/compute", {
+      const response = await fetch("http://localhost:5001/compute", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${apiKey}`,
@@ -843,7 +843,7 @@ result = anansi.compute(your_function, data, proof=True)`,
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                 <Link
-                  href="http://localhost:5000/healthz"
+                  href="http://localhost:5001/healthz"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="px-12 py-5 bg-gradient-to-r from-[#E8A0BF] to-white text-black hover:from-white hover:to-[#E8A0BF] transition-all duration-500 font-mono font-medium tracking-wide"
