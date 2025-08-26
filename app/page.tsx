@@ -85,8 +85,28 @@ export default function Home() {
         <div className="max-w-5xl mx-auto px-8 py-8 flex items-center justify-between">
           <Logo size="sm" />
           <nav className="hidden md:flex items-center space-x-12">
-            <Link href="/research" className="text-sm text-slate-400 hover:text-white transition-colors">
-              Research
+            <div className="relative group">
+              <button className="text-sm text-slate-400 hover:text-white transition-colors">Solutions</button>
+              <div className="absolute top-full left-0 mt-2 w-64 bg-black/90 border border-slate-700 rounded-lg p-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                <Link
+                  href="/solutions/campus-energy-networks"
+                  className="block py-2 text-sm text-slate-300 hover:text-white"
+                >
+                  Campus Energy Networks
+                </Link>
+                <Link
+                  href="/solutions/data-center-infrastructure"
+                  className="block py-2 text-sm text-slate-300 hover:text-white"
+                >
+                  Data Center Infrastructure
+                </Link>
+              </div>
+            </div>
+            <Link href="/methodology" className="text-sm text-slate-400 hover:text-white transition-colors">
+              Methodology
+            </Link>
+            <Link href="/labs" className="text-sm text-slate-400 hover:text-white transition-colors">
+              Labs
             </Link>
             <Link
               href="https://github.com/Rewsr"
@@ -260,8 +280,11 @@ export default function Home() {
               >
                 GitHub
               </Link>
-              <Link href="/research" className="text-sm text-slate-500 hover:text-white transition-colors">
-                Research
+              <Link href="/labs" className="text-sm text-slate-500 hover:text-white transition-colors">
+                Labs
+              </Link>
+              <Link href="/methodology" className="text-sm text-slate-500 hover:text-white transition-colors">
+                Methodology
               </Link>
             </div>
           </motion.div>

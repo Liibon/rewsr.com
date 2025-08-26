@@ -3,19 +3,21 @@
 import { useState, useEffect } from "react"
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from "framer-motion"
 import Link from "next/link"
-import { ArrowLeft, Copy, Check, ExternalLink, X } from "lucide-react"
+import { ArrowLeft, Copy, Check, ExternalLink, X, User, ChevronDown, ChevronUp } from "lucide-react"
 import { Logo } from "@/components/logo"
+import { AuthModal } from "@/components/auth-modal"
+import { useAuth } from "@/hooks/use-auth"
 
 export default function AnansiPage() {
   const [copiedStates, setCopiedStates] = useState<{ [key: string]: boolean }>({})
   const [scrollVelocity, setScrollVelocity] = useState(0)
   const [showGetStarted, setShowGetStarted] = useState(false)
   const [selectedPath, setSelectedPath] = useState<"engineer" | "compliance" | null>(null)
+  const [showAuthModal, setShowAuthModal] = useState(false)
+  const [showCliAccordion, setShowCliAccordion] = useState(false)
+  const [showMarketplaceModal, setShowMarketplaceModal] = useState(false)
 
-  // API testing state
-  const [apiKey, setApiKey] = useState("")
-  const [testResult, setTestResult] = useState<any>(null)
-  const [isLoading, setIsLoading] = useState(false)
+  const { isAuthenticated, userProfile, logout } = useAuth()
 
   const { scrollY, scrollYProgress } = useScroll()
 
@@ -73,39 +75,8 @@ export default function AnansiPage() {
     }
   }
 
-  // Updated API testing function - now uses Next.js API route
-  const testAPI = async () => {
-    if (!apiKey.trim()) {
-      alert("Please enter an API key")
-      return
-    }
-
-    setIsLoading(true)
-    try {
-      const response = await fetch("/api/test-compute", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          apiKey: apiKey,
-          fn_type: "builtin",
-          fn: "vec_add",
-          args: [
-            [1, 2, 3],
-            [10, 20, 30],
-          ],
-          policy: { min_trust: "CPU_TEE", max_cost_usd: 0.1 },
-        }),
-      })
-
-      const result = await response.json()
-      setTestResult(result)
-    } catch (error) {
-      setTestResult({ error: "Failed to connect to API" })
-    } finally {
-      setIsLoading(false)
-    }
+  const handleMarketplaceClick = () => {
+    setShowMarketplaceModal(true)
   }
 
   const engineerSteps = [
@@ -146,7 +117,7 @@ result = anansi.compute(your_function, data, proof=True)`,
     {
       name: "Google Cloud",
       logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Google_Cloud_Platform-Logo.wine-swls8jlzMgbSYRgpRPx3blhmA6eJNQ.png",
-      size: "h-12", // Make GCP logo bigger
+      size: "h-12",
     },
     {
       name: "Azure",
@@ -371,6 +342,45 @@ result = anansi.compute(your_function, data, proof=True)`,
         />
       </div>
 
+      {/* Marketplace Modal */}
+      <AnimatePresence>
+        {showMarketplaceModal && (
+          <motion.div
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowMarketplaceModal(false)}
+          >
+            <motion.div
+              className="bg-slate-900 border border-slate-700 rounded-lg p-8 max-w-md w-full mx-4"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                onClick={() => setShowMarketplaceModal(false)}
+                className="absolute top-6 right-6 text-slate-400 hover:text-white"
+              >
+                <X size={20} />
+              </button>
+              <div className="text-center">
+                <h3 className="text-2xl font-light text-white mb-4">Marketplace Approval Pending</h3>
+                <p className="text-slate-400 mb-6">
+                  We're currently waiting for marketplace approval from cloud providers. Direct CLI installation is
+                  available now.
+                </p>
+                <div className="bg-black/50 p-4 rounded font-mono text-sm text-slate-200 mb-4">
+                  <code>pip install anansi-compute</code>
+                </div>
+                <p className="text-slate-500 text-sm">Marketplace deployment will be available once approved.</p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Get Started Modal */}
       <AnimatePresence>
         {showGetStarted && (
@@ -463,16 +473,19 @@ result = anansi.compute(your_function, data, proof=True)`,
         )}
       </AnimatePresence>
 
+      {/* Auth Modal */}
+      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} mode="login" />
+
       {/* Header */}
       <header className="border-b border-slate-800/50 bg-black/80 backdrop-blur-xl sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-6">
             <Link
-              href="/research"
+              href="/labs"
               className="flex items-center gap-3 text-slate-400 hover:text-white transition-all duration-300"
             >
               <ArrowLeft size={20} />
-              <span className="font-mono text-sm">Back</span>
+              <span className="font-mono text-sm">Back to Labs</span>
             </Link>
             <div className="h-6 w-px bg-slate-700/50" />
             <Logo size="sm" />
@@ -486,12 +499,30 @@ result = anansi.compute(your_function, data, proof=True)`,
                 transition={{ duration: 0.3 }}
               />
               <span className="font-mono text-xl font-semibold text-white">Anansi</span>
-              <div className="px-2 py-1 bg-gradient-to-r from-blue-500/20 to-[#E8A0BF]/20 text-[#E8A0BF] text-xs font-mono rounded border border-[#E8A0BF]/30">
-                BETA
-              </div>
             </div>
           </div>
           <div className="flex items-center gap-4">
+            {isAuthenticated ? (
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 px-4 py-2 text-slate-400 font-mono text-sm">
+                  <User size={16} />
+                  {userProfile?.email}
+                </div>
+                <button
+                  onClick={logout}
+                  className="px-4 py-2 text-slate-400 hover:text-white transition-all duration-300 font-mono text-sm"
+                >
+                  Sign Out
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setShowAuthModal(true)}
+                className="px-4 py-2 text-slate-400 hover:text-white transition-all duration-300 font-mono text-sm"
+              >
+                Sign In
+              </button>
+            )}
             <Link
               href="/legal"
               className="flex items-center gap-2 px-4 py-2 text-slate-400 hover:text-white transition-all duration-300 font-mono text-sm group"
@@ -512,36 +543,74 @@ result = anansi.compute(your_function, data, proof=True)`,
             transition={{ duration: 1, ease: "easeOut" }}
           >
             <h1 className="text-6xl md:text-7xl font-extralight text-white mb-8 leading-[0.9] tracking-tight">
-              What's your next
+              Anansi
               <br />
               <span className="font-light bg-gradient-to-r from-white to-[#E8A0BF] bg-clip-text text-transparent">
-                big move?
+                Assurance Platform
               </span>
             </h1>
             <p className="text-xl text-slate-300 max-w-3xl mx-auto mb-16 leading-relaxed font-light">
-              Every computation you run could be cryptographically provable. Every Databricks job, every Snowflake query
-              - all backed by tamper-evident attestation that auditors actually trust.
+              Confidential computing with cryptographic proof generation for verifiable infrastructure operations across
+              multi-cloud and regulated environments.
             </p>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center">
-              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <button
-                  onClick={() => setShowGetStarted(true)}
-                  className="px-10 py-4 bg-gradient-to-r from-[#E8A0BF] to-white text-black hover:from-white hover:to-[#E8A0BF] transition-all duration-500 font-mono font-medium tracking-wide"
-                >
-                  Get Started
-                </button>
-              </motion.div>
-              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <Link
-                  href="https://github.com/rewsr/anansi"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-10 py-4 border border-slate-600 text-white hover:border-[#E8A0BF] hover:text-[#E8A0BF] transition-all duration-300 font-mono font-medium tracking-wide backdrop-blur-sm"
-                >
-                  Check the Code
-                </Link>
-              </motion.div>
+
+            {/* Marketplace Login Button */}
+            <div className="flex flex-col sm:flex-row gap-6 justify-center mb-8">
+              <motion.button
+                onClick={handleMarketplaceClick}
+                className="flex items-center gap-4 px-12 py-6 bg-gradient-to-r from-[#E8A0BF] to-white text-black hover:from-white hover:to-[#E8A0BF] transition-all duration-500 font-mono font-medium tracking-wide"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <span>Marketplace Login</span>
+              </motion.button>
             </div>
+
+            {/* Advanced/CLI Accordion */}
+            <motion.div
+              className="max-w-2xl mx-auto"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+            >
+              <button
+                onClick={() => setShowCliAccordion(!showCliAccordion)}
+                className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors font-mono text-sm mx-auto"
+              >
+                Advanced / CLI
+                {showCliAccordion ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+              </button>
+
+              <AnimatePresence>
+                {showCliAccordion && (
+                  <motion.div
+                    className="mt-6 p-6 bg-slate-900/50 border border-slate-700/50 rounded-lg backdrop-blur-sm"
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <div className="text-left space-y-4">
+                      <h3 className="text-white font-medium">Direct CLI Installation</h3>
+                      <div className="bg-black/50 p-4 rounded font-mono text-sm text-slate-200">
+                        <code>pip install anansi-compute</code>
+                      </div>
+                      <p className="text-slate-400 text-sm">
+                        For developers who prefer direct integration without marketplace deployment.
+                      </p>
+                      <Link
+                        href="https://github.com/rewsr/anansi"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 text-[#E8A0BF] hover:text-white transition-colors text-sm font-mono"
+                      >
+                        View Documentation <ExternalLink size={14} />
+                      </Link>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
           </motion.div>
         </section>
 
@@ -573,6 +642,17 @@ result = anansi.compute(your_function, data, proof=True)`,
 
         {/* What This Solves */}
         <section className="py-24 border-t border-slate-800/50">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-extralight text-white mb-8 tracking-tight">
+              Assurance Through
+              <span className="text-[#E8A0BF] font-light"> Verification</span>
+            </h2>
+            <p className="text-xl text-slate-400 max-w-3xl mx-auto font-light">
+              Cryptographic proof generation provides assurance for critical infrastructure operations across
+              multi-cloud and regulated environments.
+            </p>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
             {[
               {
@@ -731,20 +811,7 @@ result = anansi.compute(your_function, data, proof=True)`,
                   </div>
                 </div>
 
-                <motion.button
-                  onClick={() => copyToClipboard(JSON.stringify(sampleProofBundle, null, 2), "proof-bundle")}
-                  className="absolute top-6 right-6 p-2 bg-slate-800/80 border border-slate-600/50 hover:border-[#E8A0BF]/50 rounded transition-all duration-300"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  {copiedStates["proof-bundle"] ? (
-                    <Check size={16} className="text-[#E8A0BF]" />
-                  ) : (
-                    <Copy size={16} className="text-slate-400" />
-                  )}
-                </motion.button>
-
-                <pre className="text-xs font-mono text-slate-200 overflow-x-auto pr-12 leading-relaxed max-h-96 overflow-y-auto">
+                <pre className="text-xs font-mono text-slate-200 overflow-x-auto leading-relaxed max-h-96 overflow-y-auto">
                   <code>{JSON.stringify(sampleProofBundle, null, 2)}</code>
                 </pre>
               </motion.div>
@@ -778,90 +845,6 @@ result = anansi.compute(your_function, data, proof=True)`,
             </div>
           </div>
         </section>
-
-        {/* Live API Test Section */}
-        <section className="py-24 border-t border-slate-800/50 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-5xl font-extralight text-white mb-8 tracking-tight">
-              Want to
-              <span className="text-[#E8A0BF] font-light"> Try It?</span>
-            </h2>
-            <p className="text-xl text-slate-400 mb-16 max-w-2xl mx-auto font-light leading-relaxed">
-              Test the live API right here. Use API key:{" "}
-              <code className="bg-slate-800 px-2 py-1 rounded text-[#E8A0BF]">demo_key_123</code>
-            </p>
-
-            {/* Live API Test */}
-            <div className="max-w-2xl mx-auto mb-16">
-              <motion.div
-                className="bg-slate-900/50 border border-slate-700 rounded-lg p-8"
-                whileHover={{
-                  borderColor: "#E8A0BF",
-                  boxShadow: "0 0 30px rgba(232, 160, 191, 0.1)",
-                }}
-                transition={{ duration: 0.3 }}
-              >
-                <h3 className="text-xl font-medium text-white mb-6">Live API Test</h3>
-                <div className="space-y-4">
-                  <input
-                    type="text"
-                    placeholder="Enter API key (try: demo_key_123)"
-                    value={apiKey}
-                    onChange={(e) => setApiKey(e.target.value)}
-                    className="w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded text-white placeholder-slate-400 focus:border-[#E8A0BF] focus:outline-none transition-colors"
-                  />
-                  <motion.button
-                    onClick={testAPI}
-                    disabled={isLoading}
-                    className="w-full px-6 py-3 bg-gradient-to-r from-[#E8A0BF] to-white text-black hover:from-white hover:to-[#E8A0BF] transition-all duration-300 font-mono font-medium disabled:opacity-50"
-                    whileHover={{ scale: isLoading ? 1 : 1.02 }}
-                    whileTap={{ scale: isLoading ? 1 : 0.98 }}
-                  >
-                    {isLoading ? "Testing..." : "Test Vector Addition"}
-                  </motion.button>
-                </div>
-
-                {testResult && (
-                  <motion.div
-                    className="mt-6 p-4 bg-slate-800/50 border border-slate-600 rounded"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    <h4 className="text-white font-medium mb-2">API Response:</h4>
-                    <pre className="text-sm text-slate-200 overflow-x-auto">{JSON.stringify(testResult, null, 2)}</pre>
-                  </motion.div>
-                )}
-              </motion.div>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-6 justify-center">
-              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <Link
-                  href="https://github.com/rewsr/anansi"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-12 py-5 bg-gradient-to-r from-[#E8A0BF] to-white text-black hover:from-white hover:to-[#E8A0BF] transition-all duration-500 font-mono font-medium tracking-wide"
-                >
-                  View Documentation
-                </Link>
-              </motion.div>
-              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <Link
-                  href="/legal"
-                  className="px-12 py-5 border border-slate-600 text-white hover:border-[#E8A0BF] hover:text-[#E8A0BF] transition-all duration-300 font-mono font-medium tracking-wide backdrop-blur-sm"
-                >
-                  Terms of Use
-                </Link>
-              </motion.div>
-            </div>
-          </motion.div>
-        </section>
       </div>
 
       {/* Footer */}
@@ -869,7 +852,7 @@ result = anansi.compute(your_function, data, proof=True)`,
         <div className="max-w-6xl mx-auto px-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between">
             <div className="text-sm text-slate-500 font-mono tracking-wide">
-              © 2025 REWSR — Enforcement Substrate Research
+              © 2025 REWSR — Critical Infrastructure Research & Deployment
             </div>
             <div className="mt-8 md:mt-0 flex items-center space-x-12">
               <Link
@@ -887,10 +870,10 @@ result = anansi.compute(your_function, data, proof=True)`,
                 GitHub
               </Link>
               <Link
-                href="/research"
+                href="/labs"
                 className="text-sm text-slate-500 hover:text-white transition-colors font-mono tracking-wide"
               >
-                Research
+                Labs
               </Link>
             </div>
           </div>
