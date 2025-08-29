@@ -115,32 +115,31 @@ export default function FederatedPage() {
       <div className="fixed left-0 top-0 h-screen w-80 bg-white/8 backdrop-blur-md border-r border-white/20 overflow-hidden z-50">
         <div className="p-6 border-b border-white/20">{/* Removed Link component that wasn't working */}</div>
 
-        <div className="p-6 h-[calc(100vh-100px)] flex flex-col">
-          <div className="border-b border-white/20 pb-4 flex-shrink-0">
-            <h2 className="text-sm font-semibold text-white/80 uppercase tracking-wider">Contents</h2>
+        <div className="p-4 h-[calc(100vh-80px)] flex flex-col">
+          <div className="border-b border-white/20 pb-2 flex-shrink-0">
+            <h2 className="text-xs font-semibold text-white/80 uppercase tracking-wider">Contents</h2>
           </div>
 
-          <div className="flex-1 space-y-4 mt-4 text-sm">
+          <div className="flex-1 space-y-3 mt-3 text-xs">
             <div>
-              <h3 className="text-sm font-semibold text-white mb-2">Definition</h3>
-              <p className="text-white/70 text-xs leading-relaxed">
-                Machine learning technique where multiple entities collaboratively train a model while keeping data
-                decentralized.
+              <h3 className="text-xs font-semibold text-white mb-1">Definition</h3>
+              <p className="text-white/70 text-[10px] leading-tight">
+                ML technique for collaborative training while keeping data decentralized.
               </p>
             </div>
 
             <div>
-              <h3 className="text-sm font-semibold text-white mb-2">Key Principles</h3>
-              <ul className="space-y-1 text-white/70 text-xs">
-                <li>• Data privacy preservation</li>
+              <h3 className="text-xs font-semibold text-white mb-1">Key Principles</h3>
+              <ul className="space-y-0.5 text-white/70 text-[10px]">
+                <li>• Privacy preservation</li>
                 <li>• Decentralized learning</li>
                 <li>• Parameter sharing only</li>
               </ul>
             </div>
 
             <div>
-              <h3 className="text-sm font-semibold text-white mb-2">Applications</h3>
-              <ul className="space-y-1 text-white/70 text-xs">
+              <h3 className="text-xs font-semibold text-white mb-1">Applications</h3>
+              <ul className="space-y-0.5 text-white/70 text-[10px]">
                 <li>• Healthcare systems</li>
                 <li>• Anansi TEE API</li>
                 <li>• Edge computing</li>
@@ -148,12 +147,61 @@ export default function FederatedPage() {
             </div>
 
             <div>
-              <h3 className="text-sm font-semibold text-white mb-2">Advantages</h3>
-              <ul className="space-y-1 text-white/70 text-xs">
+              <h3 className="text-xs font-semibold text-white mb-1">Advantages</h3>
+              <ul className="space-y-0.5 text-white/70 text-[10px]">
                 <li>• Privacy by design</li>
                 <li>• Reduced data transfer</li>
                 <li>• Regulatory compliance</li>
               </ul>
+            </div>
+
+            <div>
+              <h3 className="text-xs font-semibold text-white mb-1">Core Equations</h3>
+              <div className="space-y-1 text-white/70 text-[10px] font-mono">
+                <div className="bg-white/5 p-1.5 rounded border border-white/10">
+                  <div>
+                    w<sub>t+1</sub> = w<sub>t</sub> - η∇F(w<sub>t</sub>)
+                  </div>
+                  <div className="text-white/50 text-[9px] mt-0.5">Global update</div>
+                </div>
+                <div className="bg-white/5 p-1.5 rounded border border-white/10">
+                  <div>
+                    F(w) = Σ<sub>k</sub> n<sub>k</sub>/n F<sub>k</sub>(w)
+                  </div>
+                  <div className="text-white/50 text-[9px] mt-0.5">Fed objective</div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-xs font-semibold text-white mb-1">Trusted Execution</h3>
+              <p className="text-white/70 text-[10px] mb-2">Secure enclaves across clouds</p>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-1">
+                  <img
+                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Amazon_Web_Services_Logo-VkN1loXkFM005ogYvT5gUsxAaZwZS9.png"
+                    alt="AWS"
+                    className="h-3 object-contain filter brightness-0 invert opacity-60"
+                  />
+                  <span className="text-white/60 text-[9px]">Nitro</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <img
+                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Microsoft_Azure.svg-9afokKMREYAkyLBCFysjMp9BL1pgBe.png"
+                    alt="Azure"
+                    className="h-3 object-contain filter brightness-0 invert opacity-60"
+                  />
+                  <span className="text-white/60 text-[9px]">SGX</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <img
+                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-51QfOKb4Mhhu6YzEpkDVVxXOpTMwox.png"
+                    alt="Google Cloud"
+                    className="h-4 object-contain opacity-80"
+                  />
+                  <span className="text-white/60 text-[9px]">CVM</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
