@@ -3,21 +3,16 @@
 import { useState, useEffect } from "react"
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from "framer-motion"
 import Link from "next/link"
-import { ArrowLeft, Copy, Check, ExternalLink, X, User, ChevronDown, ChevronUp } from "lucide-react"
+import { ArrowLeft, Copy, Check, ExternalLink, X, ChevronDown, ChevronUp } from "lucide-react"
 import { Logo } from "@/components/logo"
-import { AuthModal } from "@/components/auth-modal"
-import { useAuth } from "@/hooks/use-auth"
 
 export default function AnansiPage() {
   const [copiedStates, setCopiedStates] = useState<{ [key: string]: boolean }>({})
   const [scrollVelocity, setScrollVelocity] = useState(0)
   const [showGetStarted, setShowGetStarted] = useState(false)
   const [selectedPath, setSelectedPath] = useState<"engineer" | "compliance" | null>(null)
-  const [showAuthModal, setShowAuthModal] = useState(false)
   const [showCliAccordion, setShowCliAccordion] = useState(false)
   const [showMarketplaceModal, setShowMarketplaceModal] = useState(false)
-
-  const { isAuthenticated, userProfile, logout } = useAuth()
 
   const { scrollY, scrollYProgress } = useScroll()
 
@@ -473,9 +468,6 @@ result = anansi.compute(your_function, data, proof=True)`,
         )}
       </AnimatePresence>
 
-      {/* Auth Modal */}
-      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} mode="login" />
-
       {/* Header */}
       <header className="border-b border-slate-800/50 bg-black/80 backdrop-blur-xl sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -502,27 +494,6 @@ result = anansi.compute(your_function, data, proof=True)`,
             </div>
           </div>
           <div className="flex items-center gap-4">
-            {isAuthenticated ? (
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2 px-4 py-2 text-slate-400 font-mono text-sm">
-                  <User size={16} />
-                  {userProfile?.email}
-                </div>
-                <button
-                  onClick={logout}
-                  className="px-4 py-2 text-slate-400 hover:text-white transition-all duration-300 font-mono text-sm"
-                >
-                  Sign Out
-                </button>
-              </div>
-            ) : (
-              <button
-                onClick={() => setShowAuthModal(true)}
-                className="px-4 py-2 text-slate-400 hover:text-white transition-all duration-300 font-mono text-sm"
-              >
-                Sign In
-              </button>
-            )}
             <Link
               href="/legal"
               className="flex items-center gap-2 px-4 py-2 text-slate-400 hover:text-white transition-all duration-300 font-mono text-sm group"

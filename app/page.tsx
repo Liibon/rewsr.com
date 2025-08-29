@@ -102,8 +102,8 @@ export default function Home() {
                 </Link>
               </div>
             </div>
-            <Link href="/methodology" className="text-sm text-slate-400 hover:text-white transition-colors">
-              Methodology
+            <Link href="/federated" className="text-sm text-slate-400 hover:text-white transition-colors">
+              Federated
             </Link>
             <Link href="/labs" className="text-sm text-slate-400 hover:text-white transition-colors">
               Labs
@@ -283,8 +283,8 @@ export default function Home() {
               <Link href="/labs" className="text-sm text-slate-500 hover:text-white transition-colors">
                 Labs
               </Link>
-              <Link href="/methodology" className="text-sm text-slate-500 hover:text-white transition-colors">
-                Methodology
+              <Link href="/federated" className="text-sm text-slate-500 hover:text-white transition-colors">
+                Federated
               </Link>
             </div>
           </motion.div>
