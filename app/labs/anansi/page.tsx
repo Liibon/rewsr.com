@@ -517,12 +517,14 @@ result = anansi.compute(your_function, data, proof=True)`,
               Anansi
               <br />
               <span className="font-light bg-gradient-to-r from-white to-[#E8A0BF] bg-clip-text text-transparent">
-                Assurance Platform
+                Distributed Computing
               </span>
             </h1>
             <p className="text-xl text-slate-300 max-w-3xl mx-auto mb-16 leading-relaxed font-light">
-              Confidential computing with cryptographic proof generation for verifiable infrastructure operations across
-              multi-cloud and regulated environments.
+              Anansi for GPU ML Training enables distributed machine learning across trusted execution environments.
+              Anansi Distributed provides multi-party computation where no single party can cheat, using clean rooms and
+              TEEs to prove computational integrity for healthcare companies and other organizations requiring secure
+              collaboration.
             </p>
 
             {/* Marketplace Login Button */}
@@ -615,31 +617,34 @@ result = anansi.compute(your_function, data, proof=True)`,
         <section className="py-24 border-t border-slate-800/50">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-extralight text-white mb-8 tracking-tight">
-              Assurance Through
-              <span className="text-[#E8A0BF] font-light"> Verification</span>
+              Secure Collaboration Through
+              <span className="text-[#E8A0BF] font-light"> Trusted Execution</span>
             </h2>
             <p className="text-xl text-slate-400 max-w-3xl mx-auto font-light">
-              Cryptographic proof generation provides assurance for critical infrastructure operations across
-              multi-cloud and regulated environments.
+              Multi-party computation with cryptographic proof generation enables secure collaboration across
+              organizations. Healthcare companies can collaborate on research without exposing sensitive data, using
+              TEEs to prove computational integrity and maintain regulatory compliance.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
             {[
               {
-                title: "Trust Issues",
-                description: "How do you prove your ML model actually trained on the data you claim? Now you can.",
+                title: "Multi-party Trust",
+                description:
+                  "Healthcare institutions can collaborate on ML models without sharing patient data. TEEs prove no single party can cheat or access others' data.",
                 accent: "from-[#E8A0BF]/20 to-transparent",
               },
               {
-                title: "Audit Trails",
+                title: "Clean Room Computing",
                 description:
-                  "Compliance teams love cryptographic proof. No more explaining why your results are valid.",
+                  "Trusted execution environments create verifiable clean rooms where sensitive computations happen with cryptographic proof of integrity.",
                 accent: "from-blue-500/20 to-transparent",
               },
               {
-                title: "Reproducibility",
-                description: "Research should be verifiable. This makes your computational work actually reproducible.",
+                title: "GPU ML Training",
+                description:
+                  "Distributed machine learning across multiple GPUs with hardware-level attestation. Train models collaboratively while maintaining data sovereignty.",
                 accent: "from-purple-500/20 to-transparent",
               },
             ].map((problem, index) => (

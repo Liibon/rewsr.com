@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
+import { useState, useEffect, useRef } from "react"
+import { motion, useScroll, useTransform } from "framer-motion"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 import { Logo } from "@/components/logo"
@@ -9,6 +9,15 @@ import { Logo } from "@/components/logo"
 export default function CampusEnergyNetworksPage() {
   const [currentTime, setCurrentTime] = useState(new Date())
   const [isMobile, setIsMobile] = useState(false)
+
+  const containerRef = useRef<HTMLDivElement>(null)
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"],
+  })
+
+  const energyY = useTransform(scrollYProgress, [0, 1], [0, -100])
+  const gridY = useTransform(scrollYProgress, [0, 1], [0, -150])
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000)
@@ -44,7 +53,61 @@ export default function CampusEnergyNetworksPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div ref={containerRef} className="min-h-screen bg-black text-white relative">
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        <motion.div className="absolute inset-0 opacity-10" style={{ y: energyY }}>
+          <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" fill="none">
+            <defs>
+              <pattern id="energyGrid" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
+                <path d="M 10 0 L 0 0 0 10" fill="none" stroke="#22c55e" strokeWidth="0.3" />
+                <circle cx="5" cy="5" r="0.3" fill="#22c55e" opacity="0.6" />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#energyGrid)" />
+          </svg>
+        </motion.div>
+
+        <motion.div
+          className="absolute w-16 h-16 border border-green-500/30 rounded-full"
+          style={{
+            left: "12%",
+            top: "20%",
+            y: gridY,
+          }}
+          animate={{
+            scale: [1, 1.1, 1],
+            opacity: [0.3, 0.7, 0.3],
+          }}
+          transition={{ duration: 6, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
+        />
+
+        <motion.div
+          className="absolute w-12 h-12 border border-green-400/25 rounded-lg"
+          style={{
+            right: "18%",
+            top: "35%",
+            y: gridY,
+          }}
+          animate={{
+            rotate: [0, 90, 0],
+            opacity: [0.2, 0.5, 0.2],
+          }}
+          transition={{ duration: 8, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", delay: 1 }}
+        />
+
+        <svg className="absolute inset-0 w-full h-full opacity-15">
+          <motion.path
+            d="M50,100 Q200,50 400,100 T800,100"
+            stroke="#22c55e"
+            strokeWidth="1"
+            fill="none"
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ duration: 10, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
+          />
+        </svg>
+      </div>
+
       {/* Header */}
       <header className="border-b border-slate-800/30 bg-black/95 backdrop-blur-xl sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
@@ -67,7 +130,7 @@ export default function CampusEnergyNetworksPage() {
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 relative z-10">
         {/* Title */}
         <div className="mb-12 sm:mb-16">
           <h1 className="text-xl sm:text-2xl font-light text-white mb-2 tracking-wide">
@@ -76,6 +139,43 @@ export default function CampusEnergyNetworksPage() {
           <p className="text-slate-500 font-mono text-xs sm:text-sm tracking-wide">
             {isMobile ? "Energy monitoring" : "Real-time energy distribution monitoring"}
           </p>
+        </div>
+
+        {/* Warehouse Facility Showcase Section */}
+        <div className="mb-12 sm:mb-16">
+          <div className="text-slate-500 font-mono text-xs tracking-wider mb-3 sm:mb-4">
+            {isMobile ? "FACILITY" : "WAREHOUSE FACILITY"}
+          </div>
+          <div className="h-px bg-slate-800 mb-6 sm:mb-8" />
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-8">
+            <div>
+              <h3 className="text-xl sm:text-2xl font-light text-white mb-4">Industrial-Grade Infrastructure</h3>
+              <p className="text-slate-400 leading-relaxed mb-6">
+                Our warehouse facility houses dozens of industrial kiosks and terminals, representing tens of thousands
+                in investment as of September 29th, 2025. This infrastructure serves as the backbone for our energy
+                monitoring and distribution systems.
+              </p>
+              <div className="space-y-2 text-sm text-slate-300">
+                <div>• Industrial-grade monitoring terminals</div>
+                <div>• Real-time data processing infrastructure</div>
+                <div>• Scalable deployment architecture</div>
+                <div>• Enterprise-ready hardware solutions</div>
+              </div>
+            </div>
+
+            <div className="relative">
+              <img
+                src="/images/warehouse-kiosks.png"
+                alt="REWSR Warehouse Facility - Industrial Kiosks"
+                className="w-3/4 mx-auto rounded-lg"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-lg" />
+              <div className="absolute bottom-4 left-4 text-xs text-white/80 font-mono">
+                Warehouse Facility — Sept 29, 2025
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* System Overview */}
@@ -213,6 +313,69 @@ export default function CampusEnergyNetworksPage() {
             </div>
           </div>
         )}
+
+        {/* JLL Partnership Section */}
+        <div className="mb-12 sm:mb-16">
+          <div className="text-slate-500 font-mono text-xs tracking-wider mb-3 sm:mb-4">
+            {isMobile ? "PARTNERSHIPS" : "STRATEGIC PARTNERSHIPS"}
+          </div>
+          <div className="h-px bg-slate-800 mb-6 sm:mb-8" />
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            <div>
+              <div className="flex items-center gap-4 mb-6">
+                <img
+                  src="/images/jll-logo.png"
+                  alt="JLL"
+                  className="h-8 w-auto filter brightness-0 invert opacity-90"
+                />
+                <span className="text-slate-400 font-mono text-sm">×</span>
+                <span className="text-white font-mono text-lg">REWSR</span>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-light text-white mb-4">JLL Energy Reliability Pilot</h3>
+            </div>
+          </div>
+        </div>
+
+        {/* Data Center Expansion Section */}
+        <div className="mb-12 sm:mb-16">
+          <div className="text-slate-500 font-mono text-xs tracking-wider mb-3 sm:mb-4">
+            {isMobile ? "EXPANSION" : "MARKET EXPANSION"}
+          </div>
+          <div className="h-px bg-slate-800 mb-6 sm:mb-8" />
+
+          <div className="max-w-4xl">
+            <h3 className="text-xl sm:text-2xl font-light text-white mb-6">Data Center Infrastructure</h3>
+            <p className="text-slate-400 leading-relaxed mb-6">
+              We're partnering with manufacturers and aiming to break into data centers as soon as possible. Our energy
+              reliability systems are designed to handle the demanding requirements of modern data center operations,
+              providing real-time monitoring and predictive analytics for critical infrastructure.
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-slate-900/30 border border-slate-700/50 rounded-lg p-4">
+                <h4 className="text-white font-medium mb-2">Manufacturing Partners</h4>
+                <p className="text-slate-400 text-sm">
+                  Collaborating with hardware manufacturers to integrate our monitoring systems directly into equipment.
+                </p>
+              </div>
+
+              <div className="bg-slate-900/30 border border-slate-700/50 rounded-lg p-4">
+                <h4 className="text-white font-medium mb-2">Data Center Ready</h4>
+                <p className="text-slate-400 text-sm">
+                  Scalable solutions designed for the high-availability requirements of enterprise data centers.
+                </p>
+              </div>
+
+              <div className="bg-slate-900/30 border border-slate-700/50 rounded-lg p-4">
+                <h4 className="text-white font-medium mb-2">Predictive Analytics</h4>
+                <p className="text-slate-400 text-sm">
+                  AI-powered systems that predict equipment failures before they impact operations.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
 
         {/* Network Topology */}
         <div className="mb-12 sm:mb-16">

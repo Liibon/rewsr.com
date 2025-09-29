@@ -86,24 +86,24 @@ export default function Home() {
           <Logo size="sm" />
           <nav className="hidden md:flex items-center space-x-12">
             <div className="relative group">
-              <button className="text-sm text-slate-400 hover:text-white transition-colors">Solutions</button>
+              <button className="text-sm text-slate-400 hover:text-white transition-colors">Warehouse</button>
               <div className="absolute top-full left-0 mt-2 w-64 bg-black/90 border border-slate-700 rounded-lg p-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                 <Link
-                  href="/solutions/campus-energy-networks"
+                  href="/warehouse/campus-energy-networks"
                   className="block py-2 text-sm text-slate-300 hover:text-white"
                 >
                   Campus Energy Networks
                 </Link>
                 <Link
-                  href="/solutions/data-center-infrastructure"
+                  href="/warehouse/data-center-infrastructure"
                   className="block py-2 text-sm text-slate-300 hover:text-white"
                 >
                   Data Center Infrastructure
                 </Link>
               </div>
             </div>
-            <Link href="/federated" className="text-sm text-slate-400 hover:text-white transition-colors">
-              Federated
+            <Link href="/healthcare" className="text-sm text-slate-400 hover:text-white transition-colors">
+              Healthcare
             </Link>
             <Link href="/labs" className="text-sm text-slate-400 hover:text-white transition-colors">
               Labs
@@ -160,7 +160,7 @@ export default function Home() {
           </motion.h1>
 
           <motion.p
-            className="text-xl text-slate-400 leading-relaxed mb-16 max-w-2xl"
+            className="text-xl text-slate-400 leading-relaxed mb-24 max-w-2xl"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.8, ease: "easeOut" }}
@@ -170,6 +170,40 @@ export default function Home() {
           </motion.p>
         </motion.div>
       </motion.section>
+
+      {/* Google news section */}
+      <section className="border-t border-slate-800 relative z-10">
+        <div className="max-w-5xl mx-auto px-8 py-16">
+          <motion.div
+            className="p-8 bg-gradient-to-br from-slate-900/40 to-slate-800/40 border-2 border-slate-700/50 rounded-xl backdrop-blur-sm relative overflow-hidden max-w-3xl mx-auto"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease: "easeOut" }}
+            viewport={{ once: true }}
+          >
+            {/* Background accent */}
+            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-radial from-[#E8A0BF]/10 to-transparent rounded-full -translate-y-8 translate-x-8"></div>
+
+            <div className="flex items-start gap-6 mb-4 relative z-10">
+              <div className="flex-shrink-0">
+                <img
+                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-51QfOKb4Mhhu6YzEpkDVVxXOpTMwox.png"
+                  alt="Google"
+                  className="h-16 w-16 opacity-90"
+                />
+              </div>
+              <div>
+                <h3 className="text-3xl font-light text-white mb-2">Recent News</h3>
+                <p className="text-lg text-[#E8A0BF] font-medium">Google Startup Innovator Program</p>
+              </div>
+            </div>
+            <p className="text-lg text-slate-300 leading-relaxed relative z-10">
+              Selected for Google's exclusive startup innovator program to advance infrastructure research and
+              deployment capabilities.
+            </p>
+          </motion.div>
+        </div>
+      </section>
 
       {/* Philosophy Section - Now transparent */}
       <section className="border-t border-slate-800 relative z-10">
@@ -283,8 +317,8 @@ export default function Home() {
               <Link href="/labs" className="text-sm text-slate-500 hover:text-white transition-colors">
                 Labs
               </Link>
-              <Link href="/federated" className="text-sm text-slate-500 hover:text-white transition-colors">
-                Federated
+              <Link href="/healthcare" className="text-sm text-slate-500 hover:text-white transition-colors">
+                Healthcare
               </Link>
             </div>
           </motion.div>
