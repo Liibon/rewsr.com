@@ -16,8 +16,9 @@ export default function CampusEnergyNetworksPage() {
     offset: ["start start", "end start"],
   })
 
-  const energyY = useTransform(scrollYProgress, [0, 1], [0, -100])
-  const gridY = useTransform(scrollYProgress, [0, 1], [0, -150])
+  const electricalY = useTransform(scrollYProgress, [0, 1], [0, -100])
+  const voltageY = useTransform(scrollYProgress, [0, 1], [0, -60])
+  const powerY = useTransform(scrollYProgress, [0, 1], [0, -80])
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000)
@@ -55,57 +56,158 @@ export default function CampusEnergyNetworksPage() {
   return (
     <div ref={containerRef} className="min-h-screen bg-black text-white relative">
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        <motion.div className="absolute inset-0 opacity-10" style={{ y: energyY }}>
-          <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" fill="none">
+        <motion.div className="absolute inset-0 opacity-40" style={{ y: electricalY }}>
+          <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1200 800" fill="none">
             <defs>
-              <pattern id="energyGrid" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
-                <path d="M 10 0 L 0 0 0 10" fill="none" stroke="#22c55e" strokeWidth="0.3" />
-                <circle cx="5" cy="5" r="0.3" fill="#22c55e" opacity="0.6" />
-              </pattern>
+              <linearGradient id="powerLine" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#22c55e" stopOpacity="0" />
+                <stop offset="20%" stopColor="#22c55e" stopOpacity="0.8" />
+                <stop offset="80%" stopColor="#22c55e" stopOpacity="0.8" />
+                <stop offset="100%" stopColor="#22c55e" stopOpacity="0" />
+              </linearGradient>
+              <radialGradient id="transformer" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#22c55e" stopOpacity="1" />
+                <stop offset="50%" stopColor="#16a34a" stopOpacity="0.6" />
+                <stop offset="100%" stopColor="#15803d" stopOpacity="0.2" />
+              </radialGradient>
+              <filter id="electricGlow">
+                <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+                <feMerge>
+                  <feMergeNode in="coloredBlur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
             </defs>
-            <rect width="100%" height="100%" fill="url(#energyGrid)" />
+
+            {/* Power transmission lines */}
+            <motion.line
+              x1="50"
+              y1="150"
+              x2="1150"
+              y2="180"
+              stroke="url(#powerLine)"
+              strokeWidth="3"
+              filter="url(#electricGlow)"
+              animate={{ strokeDasharray: ["0 20", "20 20"], strokeDashoffset: [0, -40] }}
+              transition={{ duration: 4, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+            />
+            <motion.line
+              x1="80"
+              y1="300"
+              x2="1120"
+              y2="320"
+              stroke="url(#powerLine)"
+              strokeWidth="2.5"
+              filter="url(#electricGlow)"
+              animate={{ strokeDasharray: ["0 15", "15 15"], strokeDashoffset: [0, -30] }}
+              transition={{ duration: 5, repeat: Number.POSITIVE_INFINITY, ease: "linear", delay: 1 }}
+            />
+            <motion.line
+              x1="100"
+              y1="500"
+              x2="1100"
+              y2="480"
+              stroke="url(#powerLine)"
+              strokeWidth="2"
+              filter="url(#electricGlow)"
+              animate={{ strokeDasharray: ["0 25", "25 25"], strokeDashoffset: [0, -50] }}
+              transition={{ duration: 6, repeat: Number.POSITIVE_INFINITY, ease: "linear", delay: 2 }}
+            />
+
+            {/* Electrical transformers */}
+            <motion.rect
+              x="200"
+              y="140"
+              width="20"
+              height="30"
+              fill="url(#transformer)"
+              filter="url(#electricGlow)"
+              animate={{ opacity: [0.6, 1, 0.6] }}
+              transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
+            />
+            <motion.rect
+              x="600"
+              y="290"
+              width="18"
+              height="25"
+              fill="url(#transformer)"
+              filter="url(#electricGlow)"
+              animate={{ opacity: [0.7, 1, 0.7] }}
+              transition={{ duration: 4, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", delay: 1 }}
+            />
+            <motion.rect
+              x="900"
+              y="470"
+              width="22"
+              height="35"
+              fill="url(#transformer)"
+              filter="url(#electricGlow)"
+              animate={{ opacity: [0.5, 0.9, 0.5] }}
+              transition={{ duration: 3.5, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", delay: 0.5 }}
+            />
+
+            {/* Electrical arcs and sparks */}
+            <motion.path
+              d="M200,170 Q210,160 220,170 Q230,180 240,170"
+              stroke="#22c55e"
+              strokeWidth="1.5"
+              fill="none"
+              filter="url(#electricGlow)"
+              animate={{ opacity: [0, 1, 0], pathLength: [0, 1, 0] }}
+              transition={{ duration: 0.3, repeat: Number.POSITIVE_INFINITY, repeatDelay: 3 }}
+            />
+            <motion.path
+              d="M600,315 Q610,305 620,315 Q630,325 640,315"
+              stroke="#22c55e"
+              strokeWidth="1.2"
+              fill="none"
+              filter="url(#electricGlow)"
+              animate={{ opacity: [0, 1, 0], pathLength: [0, 1, 0] }}
+              transition={{ duration: 0.4, repeat: Number.POSITIVE_INFINITY, repeatDelay: 4, delay: 1 }}
+            />
           </svg>
         </motion.div>
 
-        <motion.div
-          className="absolute w-16 h-16 border border-green-500/30 rounded-full"
-          style={{
-            left: "12%",
-            top: "20%",
-            y: gridY,
-          }}
-          animate={{
-            scale: [1, 1.1, 1],
-            opacity: [0.3, 0.7, 0.3],
-          }}
-          transition={{ duration: 6, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
-        />
+        <motion.div className="absolute inset-0" style={{ y: voltageY }}>
+          {[...Array(8)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute"
+              style={{
+                left: `${20 + i * 12}%`,
+                top: `${25 + (i % 3) * 20}%`,
+                width: "2px",
+                height: "40px",
+                background: "linear-gradient(to bottom, transparent, #22c55e, transparent)",
+                filter: "blur(1px)",
+              }}
+              animate={{
+                scaleY: [1, 2.5, 0.5, 1.8, 1],
+                opacity: [0.3, 0.8, 0.2, 0.9, 0.3],
+              }}
+              transition={{
+                duration: 2 + i * 0.3,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "easeInOut",
+                delay: i * 0.4,
+              }}
+            />
+          ))}
+        </motion.div>
 
         <motion.div
-          className="absolute w-12 h-12 border border-green-400/25 rounded-lg"
-          style={{
-            right: "18%",
-            top: "35%",
-            y: gridY,
-          }}
+          className="absolute inset-0 opacity-15"
+          style={{ y: powerY }}
           animate={{
-            rotate: [0, 90, 0],
-            opacity: [0.2, 0.5, 0.2],
+            background: [
+              "radial-gradient(circle at 25% 30%, rgba(34, 197, 94, 0.15) 0%, transparent 40%)",
+              "radial-gradient(circle at 75% 60%, rgba(34, 197, 94, 0.25) 0%, transparent 40%)",
+              "radial-gradient(circle at 40% 80%, rgba(34, 197, 94, 0.18) 0%, transparent 40%)",
+              "radial-gradient(circle at 25% 30%, rgba(34, 197, 94, 0.15) 0%, transparent 40%)",
+            ],
           }}
-          transition={{ duration: 8, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", delay: 1 }}
+          transition={{ duration: 8, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
         />
-
-        <svg className="absolute inset-0 w-full h-full opacity-15">
-          <motion.path
-            d="M50,100 Q200,50 400,100 T800,100"
-            stroke="#22c55e"
-            strokeWidth="1"
-            fill="none"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{ duration: 10, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
-          />
-        </svg>
       </div>
 
       {/* Header */}
@@ -168,7 +270,7 @@ export default function CampusEnergyNetworksPage() {
               <img
                 src="/images/warehouse-kiosks.png"
                 alt="REWSR Warehouse Facility - Industrial Kiosks"
-                className="w-3/4 mx-auto rounded-lg"
+                className="w-2/5 mx-auto rounded-lg"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-lg" />
               <div className="absolute bottom-4 left-4 text-xs text-white/80 font-mono">

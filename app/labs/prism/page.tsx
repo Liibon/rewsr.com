@@ -35,88 +35,217 @@ export default function PrismPage() {
     offset: ["start start", "end start"],
   })
 
-  const backgroundY = useTransform(scrollYProgress, [0, 1], [0, -200])
-  const prismY = useTransform(scrollYProgress, [0, 1], [0, -150])
-  const lightY = useTransform(scrollYProgress, [0, 1], [0, -100])
+  const spectrumY = useTransform(scrollYProgress, [0, 1], [0, -140])
+  const interferenceY = useTransform(scrollYProgress, [0, 1], [0, -90])
+  const quantumY = useTransform(scrollYProgress, [0, 1], [0, -70])
 
   return (
     <div ref={containerRef} className="min-h-screen bg-black text-white relative">
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        <motion.div className="absolute inset-0 opacity-15" style={{ y: backgroundY }}>
-          <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" fill="none">
+        <motion.div className="absolute inset-0 opacity-60" style={{ y: spectrumY }}>
+          <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1200 800" fill="none">
             <defs>
-              <pattern id="prismGrid" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
-                <path d="M 8 0 L 0 0 0 8" fill="none" stroke="#1e40af" strokeWidth="0.3" />
-                <path d="M 4 0 L 8 4 L 4 8 L 0 4 Z" fill="none" stroke="#3b82f6" strokeWidth="0.2" />
-              </pattern>
-              <linearGradient id="lightBeam" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#60a5fa" stopOpacity="0.1" />
-                <stop offset="50%" stopColor="#3b82f6" stopOpacity="0.05" />
-                <stop offset="100%" stopColor="#1e40af" stopOpacity="0.02" />
+              <linearGradient id="spectrum1" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#3b82f6" stopOpacity="0" />
+                <stop offset="20%" stopColor="#6366f1" stopOpacity="0.8" />
+                <stop offset="40%" stopColor="#8b5cf6" stopOpacity="0.9" />
+                <stop offset="60%" stopColor="#a855f7" stopOpacity="0.8" />
+                <stop offset="80%" stopColor="#d946ef" stopOpacity="0.7" />
+                <stop offset="100%" stopColor="#ec4899" stopOpacity="0" />
               </linearGradient>
+              <linearGradient id="spectrum2" x1="0%" y1="100%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#06b6d4" stopOpacity="0" />
+                <stop offset="25%" stopColor="#3b82f6" stopOpacity="0.7" />
+                <stop offset="50%" stopColor="#6366f1" stopOpacity="0.9" />
+                <stop offset="75%" stopColor="#8b5cf6" stopOpacity="0.8" />
+                <stop offset="100%" stopColor="#a855f7" stopOpacity="0" />
+              </linearGradient>
+              <radialGradient id="quantumField" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#60a5fa" stopOpacity="0.9" />
+                <stop offset="40%" stopColor="#3b82f6" stopOpacity="0.6" />
+                <stop offset="80%" stopColor="#1d4ed8" stopOpacity="0.3" />
+                <stop offset="100%" stopColor="#1e3a8a" stopOpacity="0.1" />
+              </radialGradient>
+              <filter id="quantumGlow">
+                <feGaussianBlur stdDeviation="4" result="coloredBlur" />
+                <feMerge>
+                  <feMergeNode in="coloredBlur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
             </defs>
-            <rect width="100%" height="100%" fill="url(#prismGrid)" />
+
+            {/* Electromagnetic wave interference patterns */}
+            <motion.path
+              d="M0,200 Q200,150 400,200 Q600,250 800,200 Q1000,150 1200,200"
+              stroke="url(#spectrum1)"
+              strokeWidth="6"
+              fill="none"
+              filter="url(#quantumGlow)"
+              animate={{
+                d: [
+                  "M0,200 Q200,150 400,200 Q600,250 800,200 Q1000,150 1200,200",
+                  "M0,200 Q200,250 400,200 Q600,150 800,200 Q1000,250 1200,200",
+                  "M0,200 Q200,150 400,200 Q600,250 800,200 Q1000,150 1200,200",
+                ],
+              }}
+              transition={{ duration: 8, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
+            />
+            <motion.path
+              d="M0,400 Q300,350 600,400 Q900,450 1200,400"
+              stroke="url(#spectrum2)"
+              strokeWidth="5"
+              fill="none"
+              filter="url(#quantumGlow)"
+              animate={{
+                d: [
+                  "M0,400 Q300,350 600,400 Q900,450 1200,400",
+                  "M0,400 Q300,450 600,400 Q900,350 1200,400",
+                  "M0,400 Q300,350 600,400 Q900,450 1200,400",
+                ],
+              }}
+              transition={{ duration: 10, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", delay: 2 }}
+            />
+
+            {/* Quantum field distortions */}
+            <motion.ellipse
+              cx="300"
+              cy="300"
+              rx="80"
+              ry="40"
+              fill="url(#quantumField)"
+              filter="url(#quantumGlow)"
+              animate={{
+                rx: [60, 100, 60],
+                ry: [30, 50, 30],
+                rotate: [0, 45, 0],
+                opacity: [0.6, 1, 0.6],
+              }}
+              transition={{ duration: 6, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
+            />
+            <motion.ellipse
+              cx="800"
+              cy="500"
+              rx="60"
+              ry="30"
+              fill="url(#quantumField)"
+              filter="url(#quantumGlow)"
+              animate={{
+                rx: [50, 80, 50],
+                ry: [25, 40, 25],
+                rotate: [0, -30, 0],
+                opacity: [0.7, 0.9, 0.7],
+              }}
+              transition={{ duration: 7, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", delay: 1 }}
+            />
+
+            {/* Holographic interference grid */}
+            <motion.g opacity="0.4">
+              {[...Array(8)].map((_, i) => (
+                <motion.line
+                  key={i}
+                  x1={i * 150}
+                  y1="0"
+                  x2={i * 150}
+                  y2="800"
+                  stroke="#60a5fa"
+                  strokeWidth="0.5"
+                  animate={{ opacity: [0.2, 0.6, 0.2] }}
+                  transition={{ duration: 4, repeat: Number.POSITIVE_INFINITY, delay: i * 0.2 }}
+                />
+              ))}
+              {[...Array(6)].map((_, i) => (
+                <motion.line
+                  key={i}
+                  x1="0"
+                  y1={i * 130}
+                  x2="1200"
+                  y2={i * 130}
+                  stroke="#60a5fa"
+                  strokeWidth="0.5"
+                  animate={{ opacity: [0.3, 0.7, 0.3] }}
+                  transition={{ duration: 5, repeat: Number.POSITIVE_INFINITY, delay: i * 0.3 }}
+                />
+              ))}
+            </motion.g>
           </svg>
         </motion.div>
 
-        <motion.div
-          className="absolute w-24 h-24 border border-blue-400/30"
-          style={{
-            left: "15%",
-            top: "25%",
-            y: prismY,
-            clipPath: "polygon(50% 0%, 0% 100%, 100% 100%)",
-          }}
-          animate={{
-            rotate: [0, 3, -3, 0],
-            scale: [1, 1.05, 0.95, 1],
-          }}
-          transition={{ duration: 10, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
-        />
+        <motion.div className="absolute inset-0" style={{ y: interferenceY }}>
+          {[...Array(20)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute bg-blue-400"
+              style={{
+                left: `${5 + i * 4.5}%`,
+                top: `${15 + (i % 5) * 12}%`,
+                width: "2px",
+                height: "2px",
+                borderRadius: "50%",
+                filter: "blur(1px)",
+              }}
+              animate={{
+                y: [0, -60, 30, -80, 0],
+                x: [0, 40, -20, 60, 0],
+                opacity: [0.3, 1, 0.5, 0.8, 0.3],
+                scale: [0.5, 2, 1, 1.5, 0.5],
+              }}
+              transition={{
+                duration: 12 + i * 0.3,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "easeInOut",
+                delay: i * 0.4,
+              }}
+            />
+          ))}
+        </motion.div>
 
         <motion.div
-          className="absolute w-32 h-16 border border-blue-300/25"
-          style={{
-            right: "20%",
-            top: "35%",
-            y: prismY,
-            clipPath: "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)",
-          }}
+          className="absolute inset-0 opacity-30"
+          style={{ y: quantumY }}
           animate={{
-            rotate: [0, -2, 2, 0],
-            opacity: [0.3, 0.6, 0.3],
+            background: [
+              "conic-gradient(from 0deg at 30% 40%, rgba(96, 165, 250, 0.15) 0deg, rgba(59, 130, 246, 0.2) 90deg, rgba(29, 78, 216, 0.15) 180deg, rgba(30, 58, 138, 0.1) 270deg, rgba(96, 165, 250, 0.15) 360deg)",
+              "conic-gradient(from 90deg at 70% 60%, rgba(147, 197, 253, 0.18) 0deg, rgba(96, 165, 250, 0.25) 90deg, rgba(59, 130, 246, 0.18) 180deg, rgba(29, 78, 216, 0.12) 270deg, rgba(147, 197, 253, 0.18) 360deg)",
+              "conic-gradient(from 180deg at 50% 20%, rgba(59, 130, 246, 0.2) 0deg, rgba(29, 78, 216, 0.28) 90deg, rgba(30, 58, 138, 0.15) 180deg, rgba(96, 165, 250, 0.1) 270deg, rgba(59, 130, 246, 0.2) 360deg)",
+              "conic-gradient(from 0deg at 30% 40%, rgba(96, 165, 250, 0.15) 0deg, rgba(59, 130, 246, 0.2) 90deg, rgba(29, 78, 216, 0.15) 180deg, rgba(30, 58, 138, 0.1) 270deg, rgba(96, 165, 250, 0.15) 360deg)",
+            ],
           }}
-          transition={{ duration: 12, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", delay: 1 }}
+          transition={{ duration: 20, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
         />
 
+        {/* Secure perimeter boundaries */}
         <motion.div
-          className="absolute w-1 h-40 bg-gradient-to-b from-blue-400/20 to-transparent"
-          style={{
-            left: "60%",
-            bottom: "30%",
-            y: lightY,
-            transform: "rotate(15deg)",
-          }}
+          className="absolute top-1/4 left-1/5 w-48 h-24 border-2 border-blue-400/40 rounded-lg"
           animate={{
-            opacity: [0.2, 0.5, 0.2],
-            scaleY: [1, 1.2, 1],
+            borderColor: [
+              "rgba(96, 165, 250, 0.4)",
+              "rgba(59, 130, 246, 0.7)",
+              "rgba(29, 78, 216, 0.5)",
+              "rgba(96, 165, 250, 0.4)",
+            ],
+            boxShadow: [
+              "0 0 30px rgba(96, 165, 250, 0.2)",
+              "0 0 60px rgba(59, 130, 246, 0.4)",
+              "0 0 40px rgba(29, 78, 216, 0.3)",
+              "0 0 30px rgba(96, 165, 250, 0.2)",
+            ],
           }}
-          transition={{ duration: 8, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", delay: 2 }}
+          transition={{ duration: 8, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
         />
-
         <motion.div
-          className="absolute w-1 h-32 bg-gradient-to-b from-blue-300/15 to-transparent"
-          style={{
-            left: "25%",
-            bottom: "45%",
-            y: lightY,
-            transform: "rotate(-20deg)",
-          }}
+          className="absolute bottom-1/3 right-1/6 w-32 h-32 border-2 border-blue-300/30 rounded-full"
           animate={{
-            opacity: [0.1, 0.4, 0.1],
-            scaleY: [1, 1.3, 1],
+            borderColor: [
+              "rgba(147, 197, 253, 0.3)",
+              "rgba(96, 165, 250, 0.6)",
+              "rgba(59, 130, 246, 0.4)",
+              "rgba(147, 197, 253, 0.3)",
+            ],
+            scale: [1, 1.2, 0.9, 1],
+            rotate: [0, 180, 360],
           }}
-          transition={{ duration: 9, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", delay: 3 }}
+          transition={{ duration: 12, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", delay: 2 }}
         />
       </div>
 
