@@ -10,24 +10,13 @@ export default function DevPage() {
         {/* X Symbol */}
         <div className="text-white text-4xl font-light">×</div>
 
-        {/* JLL Logo */}
         <div className="flex-shrink-0">
-          <div className="flex items-center gap-3">
-            {/* JLL Worldmark Symbol */}
-            <div className="w-8 h-8 bg-red-600 rounded-sm flex items-center justify-center">
-              <div className="w-6 h-6 bg-white rounded-full opacity-90"></div>
-            </div>
-            {/* JLL Text */}
-            <div className="text-white font-bold text-3xl tracking-wider" style={{ fontFamily: "serif" }}>
-              JLL
-            </div>
-          </div>
+          <img src="/images/jll-logo.png" alt="JLL" className="h-16 w-auto" />
         </div>
       </div>
 
-      {/* Pilot Secured Text */}
       <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2">
-        <p className="text-white text-xl font-light tracking-wide">pilot secured</p>
+        <p className="text-white text-xl font-light tracking-wide">Partnership Secured</p>
       </div>
     </div>
   )
